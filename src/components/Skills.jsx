@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Code, Server, Tool, Cloud } from 'lucide-react'
+import { Code, Server, Wrench, Cloud } from 'lucide-react'
 
 const Skills = () => {
   const skillCategories = [
@@ -14,8 +14,8 @@ const Skills = () => {
       skills: ['Node.js', 'PostgreSQL', 'Redis', 'GraphQL', 'Prisma']
     },
     {
-      title: 'Tools',
-      icon: <Tool />,
+      title: 'Wrenchs',
+      icon: <Wrench />,
       skills: ['Git', 'Docker', 'Vite', 'Postman', 'Figma']
     },
     {

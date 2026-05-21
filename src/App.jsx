@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Github, Linkedin, Mail, ArrowRight, ExternalLink, Code, Server, Tool, Cloud } from 'lucide-react'
+import { Sun, Moon, Github, Linkedin, Mail, ArrowRight, ExternalLink, Code, Server, Wrench, Cloud } from 'lucide-react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
