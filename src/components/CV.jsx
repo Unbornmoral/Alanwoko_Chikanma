@@ -1,54 +1,64 @@
+'use client';
+
 import { motion } from 'framer-motion'
-import { Briefcase, GraduationCap, Code, Download, Calendar, MapPin } from 'lucide-react'
+import { Briefcase, GraduationCap, Code, Download, MapPin, Plus, Trash2, Upload } from 'lucide-react'
+import { usePortfolio } from '../context/PortfolioContext'
+import InlineEditable from './InlineEditable'
+import { useRef } from 'react'
 
 const CV = () => {
-  const experiences = [
-    {
-      company: 'TechNova Solutions',
-      role: 'Senior Full Stack Engineer',
-      period: '2023 - Present',
-      location: 'Remote / Lagos',
-      description: 'Lead engineer for the core platform architecture. Responsible for scaling frontend micro-services and implementing high-performance API layers.',
-      achievements: [
-        'Architected and deployed a micro-frontend system using Module Federation.',
-        'Reduced overall bundle size by 35% through aggressive code-splitting.',
-        'Implemented a real-time analytics engine using WebSockets and Redis.'
-      ]
-    },
-    {
-      company: 'DigitalPulse',
-      role: 'Full Stack Developer',
-      period: '2021 - 2023',
-      location: 'London, UK (Remote)',
-      description: 'Key contributor to a multi-tenant SaaS product focused on marketing automation.',
-      achievements: [
-        'Developed a drag-and-drop workflow builder using React-Flow.',
-        'Optimized PostgreSQL queries, improving dashboard load times by 50%.',
-        'Built a comprehensive UI component library.'
-      ]
-    }
-  ]
+  const { data, updateData, isAdmin } = usePortfolio();
+  const fileInputRef = useRef(null);
 
-  const education = [
-    {
-      school: 'University of Lagos',
-      degree: 'B.Sc. in Computer Science',
-      period: '2015 - 2019',
-      location: 'Lagos, Nigeria'
-    },
-    {
-      school: 'Tech Institute',
-      degree: 'Full Stack Development Certification',
-      period: '2019 - 2020',
-      location: 'Online'
-    }
-  ]
+  if (!data) return null;
 
-  const skillGroups = [
-    { name: 'Frontend', skills: ['React', 'Next.js', 'Tailwind', 'TypeScript'] },
-    { name: 'Backend', skills: ['Node.js', 'PostgreSQL', 'Redis', 'GraphQL'] },
-    { name: 'Cloud', skills: ['AWS', 'Docker', 'Kubernetes', 'Vercel'] }
-  ]
+  const updateCV = (field, value) => {
+    updateData({ ...data, cv: { ...data.cv, [field]: value } });
+  };
+
+  const handleCvUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Mock upload
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: JSON.stringify({ filename: file.name, type: 'pdf' })
+    });
+    const result = await response.json();
+    // For mock, we'll just use a sample PDF URL or the same mock image URL
+    updateCV('cvUrl', result.url);
+    alert('CV updated successfully (Mock)');
+  };
+
+  const updateExperience = (idx, field, value) => {
+    const newExperiences = [...data.cv.experiences];
+    newExperiences[idx] = { ...newExperiences[idx], [field]: value };
+    updateCV('experiences', newExperiences);
+  };
+
+  const updateAchievement = (expIdx, achIdx, value) => {
+    const newExperiences = [...data.cv.experiences];
+    newExperiences[expIdx].achievements[achIdx] = value;
+    updateCV('experiences', newExperiences);
+  };
+
+  const addExperience = () => {
+    const newExperiences = [{
+      company: 'New Company',
+      role: 'New Role',
+      period: '2024 - Present',
+      location: 'Remote',
+      description: 'Describe your role...',
+      achievements: ['First achievement']
+    }, ...data.cv.experiences];
+    updateCV('experiences', newExperiences);
+  };
+
+  const removeExperience = (idx) => {
+    const newExperiences = data.cv.experiences.filter((_, i) => i !== idx);
+    updateCV('experiences', newExperiences);
+  };
 
   return (
     <section id="cv" className="py-32 bg-white dark:bg-black">
@@ -65,67 +75,92 @@ const CV = () => {
               <p className="text-slate-500 text-lg font-medium">Professional trajectory and academic background.</p>
             </div>
             
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              animate={{ 
-                y: [0, -8, 0],
-              }}
-              transition={{ 
-                y: { 
-                  duration: 1.5, 
-                  repeat: Infinity, 
-                  ease: [0.175, 0.885, 0.32, 1.275] 
-                } 
-              }}
-              className="flex items-center gap-3 px-8 py-4 bg-brand-primary text-white rounded-2xl font-bold shadow-lg shadow-brand-primary/20 hover:bg-brand-primary/90 transition-all"
-            >
-              <Download size={20} />
-              Download PDF
-            </motion.button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              {isAdmin && (
+                <>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    className="hidden" 
+                    accept=".pdf"
+                    onChange={handleCvUpload}
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-3 px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold transition-all"
+                  >
+                    <Upload size={20} />
+                    Attach/Update CV
+                  </motion.button>
+                </>
+              )}
+              <motion.a
+                href={data.cv.cvUrl || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{ y: [0, -8, 0] }}
+                transition={{ y: { duration: 1.5, repeat: Infinity, ease: [0.175, 0.885, 0.32, 1.275] } }}
+                className="flex items-center gap-3 px-8 py-4 bg-brand-primary text-white rounded-2xl font-bold shadow-lg shadow-brand-primary/20 hover:bg-brand-primary/90 transition-all"
+              >
+                <Download size={20} />
+                Download PDF
+              </motion.a>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-[2fr_1fr] gap-16">
-            {/* Left Column: Experience & Education */}
             <div className="space-y-16">
-              {/* Experience */}
               <div>
-                <div className="flex items-center gap-4 mb-10">
-                  <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900 text-brand-primary">
-                    <Briefcase size={24} />
+                <div className="flex items-center justify-between mb-10">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900 text-brand-primary">
+                      <Briefcase size={24} />
+                    </div>
+                    <h3 className="text-3xl font-bold tracking-tight">Experience</h3>
                   </div>
-                  <h3 className="text-3xl font-bold tracking-tight">Experience</h3>
+                  {isAdmin && (
+                    <button onClick={addExperience} className="p-2 text-brand-primary hover:bg-brand-primary/10 rounded-full transition-colors"><Plus size={24} /></button>
+                  )}
                 </div>
                 
                 <div className="space-y-12">
-                  {experiences.map((exp, i) => (
+                  {data.cv.experiences.map((exp, i) => (
                     <motion.div 
                       key={i}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
-                      className="relative pl-8 border-l-2 border-slate-100 dark:border-slate-800"
+                      className="relative pl-8 border-l-2 border-slate-100 dark:border-slate-800 group"
                     >
                       <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand-primary border-4 border-white dark:border-black" />
+                      {isAdmin && (
+                        <button onClick={() => removeExperience(i)} className="absolute -left-12 top-0 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
+                      )}
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
-                        <h4 className="text-xl font-bold">{exp.role}</h4>
+                        <h4 className="text-xl font-bold">
+                          <InlineEditable value={exp.role} onSave={(val) => updateExperience(i, 'role', val)} />
+                        </h4>
                         <span className="text-sm font-bold text-brand-primary px-3 py-1 rounded-full bg-brand-primary/5 border border-brand-primary/10">
-                          {exp.period}
+                          <InlineEditable value={exp.period} onSave={(val) => updateExperience(i, 'period', val)} />
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-sm font-medium mb-4">
-                        <span className="flex items-center gap-1"><Briefcase size={14} /> {exp.company}</span>
-                        <span className="flex items-center gap-1"><MapPin size={14} /> {exp.location}</span>
+                        <span className="flex items-center gap-1"><Briefcase size={14} /> <InlineEditable value={exp.company} onSave={(val) => updateExperience(i, 'company', val)} /></span>
+                        <span className="flex items-center gap-1"><MapPin size={14} /> <InlineEditable value={exp.location} onSave={(val) => updateExperience(i, 'location', val)} /></span>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 mb-4 leading-relaxed font-medium">
-                        {exp.description}
+                        <InlineEditable value={exp.description} onSave={(val) => updateExperience(i, 'description', val)} multiline />
                       </p>
                       <ul className="space-y-2">
                         {exp.achievements.map((item, j) => (
-                          <li key={j} className="flex items-start gap-3 text-sm text-slate-500 dark:text-slate-400 font-medium">
+                          <li key={j} className="flex items-start gap-3 text-sm text-slate-500 dark:text-slate-400 font-medium group/ach">
                             <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-primary flex-shrink-0" />
-                            {item}
+                            <InlineEditable value={item} onSave={(val) => updateAchievement(i, j, val)} />
                           </li>
                         ))}
                       </ul>
@@ -134,7 +169,6 @@ const CV = () => {
                 </div>
               </div>
 
-              {/* Education */}
               <div>
                 <div className="flex items-center gap-4 mb-10">
                   <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900 text-brand-primary">
@@ -144,7 +178,7 @@ const CV = () => {
                 </div>
 
                 <div className="space-y-12">
-                  {education.map((edu, i) => (
+                  {data.cv.education.map((edu, i) => (
                     <motion.div 
                       key={i}
                       initial={{ opacity: 0, x: -20 }}
@@ -155,13 +189,31 @@ const CV = () => {
                     >
                       <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 border-4 border-white dark:border-black" />
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
-                        <h4 className="text-xl font-bold">{edu.degree}</h4>
+                        <h4 className="text-xl font-bold">
+                          <InlineEditable value={edu.degree} onSave={(val) => {
+                            const newEdu = [...data.cv.education];
+                            newEdu[i].degree = val;
+                            updateCV('education', newEdu);
+                          }} />
+                        </h4>
                         <span className="text-sm font-bold text-slate-500 dark:text-slate-400">
-                          {edu.period}
+                          <InlineEditable value={edu.period} onSave={(val) => {
+                            const newEdu = [...data.cv.education];
+                            newEdu[i].period = val;
+                            updateCV('education', newEdu);
+                          }} />
                         </span>
                       </div>
                       <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                        {edu.school} • {edu.location}
+                        <InlineEditable value={edu.school} onSave={(val) => {
+                          const newEdu = [...data.cv.education];
+                          newEdu[i].school = val;
+                          updateCV('education', newEdu);
+                        }} /> • <InlineEditable value={edu.location} onSave={(val) => {
+                          const newEdu = [...data.cv.education];
+                          newEdu[i].location = val;
+                          updateCV('education', newEdu);
+                        }} />
                       </div>
                     </motion.div>
                   ))}
@@ -169,7 +221,6 @@ const CV = () => {
               </div>
             </div>
 
-            {/* Right Column: Skills Sidebar */}
             <div className="space-y-8">
               <div className="p-8 rounded-[32px] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-4 mb-8">
@@ -180,16 +231,26 @@ const CV = () => {
                 </div>
                 
                 <div className="space-y-8">
-                  {skillGroups.map((group, i) => (
+                  {data.cv.skillGroups.map((group, i) => (
                     <div key={i}>
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{group.name}</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                        <InlineEditable value={group.name} onSave={(val) => {
+                          const newGroups = [...data.cv.skillGroups];
+                          newGroups[i].name = val;
+                          updateCV('skillGroups', newGroups);
+                        }} />
+                      </h4>
                       <div className="flex flex-wrap gap-2">
                         {group.skills.map((skill, j) => (
                           <span 
                             key={j}
                             className="px-4 py-2 rounded-xl bg-white dark:bg-black border border-slate-100 dark:border-slate-800 text-sm font-bold shadow-sm"
                           >
-                            {skill}
+                            <InlineEditable value={skill} onSave={(val) => {
+                              const newGroups = [...data.cv.skillGroups];
+                              newGroups[i].skills[j] = val;
+                              updateCV('skillGroups', newGroups);
+                            }} />
                           </span>
                         ))}
                       </div>
@@ -198,7 +259,6 @@ const CV = () => {
                 </div>
               </div>
 
-              {/* Quick Info Card */}
               <div className="p-8 rounded-[32px] bg-brand-primary text-white overflow-hidden relative group">
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-4">Let's build something together.</h3>

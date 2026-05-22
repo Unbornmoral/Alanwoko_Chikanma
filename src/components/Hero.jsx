@@ -1,7 +1,14 @@
+'use client';
+
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Upload } from 'lucide-react'
+import { usePortfolio } from '../context/PortfolioContext'
+import InlineEditable from './InlineEditable'
+import { useRef } from 'react'
 
 const Hero = () => {
+  const { data, updateData, isAdmin } = usePortfolio();
+  const fileInputRef = useRef(null);
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -10,6 +17,8 @@ const Hero = () => {
 
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"])
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"])
+
+  if (!data) return null;
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -27,6 +36,24 @@ const Hero = () => {
     x.set(0)
     y.set(0)
   }
+
+  const updateHero = (field, value) => {
+    const newData = { ...data, hero: { ...data.hero, [field]: value } };
+    updateData(newData);
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: JSON.stringify({ type: 'profile' })
+    });
+    const result = await response.json();
+    updateHero('profileImage', result.url);
+    alert('Profile photo updated successfully (Mock)');
+  };
 
   return (
     <section 
@@ -62,23 +89,38 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.span 
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
             className="inline-block px-4 py-1.5 mb-6 text-xs font-semibold tracking-widest uppercase bg-slate-100 dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-800"
           >
-            Available for new projects
-          </motion.span>
+            <InlineEditable 
+              value={data.hero.badge} 
+              onSave={(val) => updateHero('badge', val)} 
+            />
+          </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-400 leading-[1.1]"
           >
-            Hi, I’m Alanwoko Chikanma. <br />
-            Senior Full‑Stack Engineer. <br />
-            <span className="text-brand-primary">I build fast, scalable, human‑centered digital experiences.</span>
+            <InlineEditable 
+              value={data.hero.title} 
+              onSave={(val) => updateHero('title', val)} 
+              multiline
+              component="span"
+            />
+            <br />
+            <span className="text-brand-primary">
+              <InlineEditable 
+                value={data.hero.subtitle} 
+                onSave={(val) => updateHero('subtitle', val)} 
+                multiline
+                component="span"
+              />
+            </span>
           </motion.h1>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -135,9 +177,36 @@ const Hero = () => {
               style={{
                 transform: "translateZ(80px)",
               }}
-              className="absolute text-6xl font-bold tracking-tighter drop-shadow-2xl"
+              className={`absolute overflow-hidden rounded-full border-4 border-white/50 shadow-2xl ${isAdmin ? 'cursor-pointer group' : ''}`}
+              onClick={() => isAdmin && fileInputRef.current?.click()}
             >
-              AC<span className="text-brand-primary">.</span>
+              {isAdmin && (
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                />
+              )}
+              
+              {data.hero.profileImage ? (
+                <img 
+                  src={data.hero.profileImage} 
+                  alt="Profile" 
+                  className="w-48 h-48 object-cover"
+                />
+              ) : (
+                <div className="w-48 h-48 flex items-center justify-center bg-brand-primary text-6xl font-bold text-white tracking-tighter">
+                  AC<span className="opacity-50">.</span>
+                </div>
+              )}
+
+              {isAdmin && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Upload className="text-white" size={32} />
+                </div>
+              )}
             </div>
             
             {/* Floating glass elements */}

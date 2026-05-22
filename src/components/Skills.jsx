@@ -1,30 +1,49 @@
+'use client';
+
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { Code, Server, Wrench, Cloud } from 'lucide-react'
-import { useState } from 'react'
+import { Code, Server, Wrench, Cloud, Plus, Trash2 } from 'lucide-react'
+import { usePortfolio } from '../context/PortfolioContext'
+import InlineEditable from './InlineEditable'
+
+const iconMap = {
+  Code: <Code />,
+  Server: <Server />,
+  Wrench: <Wrench />,
+  Cloud: <Cloud />
+};
 
 const Skills = () => {
-  const skillCategories = [
-    {
-      title: 'Frontend',
-      icon: <Code />,
-      skills: ['React 19', 'Next.js', 'Tailwind CSS', 'Framer Motion', 'TypeScript']
-    },
-    {
-      title: 'Backend',
-      icon: <Server />,
-      skills: ['Node.js', 'PostgreSQL', 'Redis', 'GraphQL', 'Prisma']
-    },
-    {
-      title: 'Tools',
-      icon: <Wrench />,
-      skills: ['Git', 'Docker', 'Vite', 'Postman', 'Figma']
-    },
-    {
-      title: 'Cloud',
-      icon: <Cloud />,
-      skills: ['AWS', 'Vercel', 'Netlify', 'Firebase', 'Clerk']
-    }
-  ]
+  const { data, updateData, isAdmin } = usePortfolio();
+
+  if (!data) return null;
+
+  const updateSkillsHeader = (field, value) => {
+    updateData({ ...data, skills: { ...data.skills, [field]: value } });
+  };
+
+  const updateCategoryTitle = (idx, value) => {
+    const newCategories = [...data.skills.categories];
+    newCategories[idx] = { ...newCategories[idx], title: value };
+    updateData({ ...data, skills: { ...data.skills, categories: newCategories } });
+  };
+
+  const updateSkill = (catIdx, skillIdx, value) => {
+    const newCategories = [...data.skills.categories];
+    newCategories[catIdx].skills[skillIdx] = value;
+    updateData({ ...data, skills: { ...data.skills, categories: newCategories } });
+  };
+
+  const addSkill = (catIdx) => {
+    const newCategories = [...data.skills.categories];
+    newCategories[catIdx].skills.push('New Skill');
+    updateData({ ...data, skills: { ...data.skills, categories: newCategories } });
+  };
+
+  const removeSkill = (catIdx, skillIdx) => {
+    const newCategories = [...data.skills.categories];
+    newCategories[catIdx].skills.splice(skillIdx, 1);
+    updateData({ ...data, skills: { ...data.skills, categories: newCategories } });
+  };
 
   return (
     <section id="skills" className="py-24">
@@ -36,7 +55,11 @@ const Skills = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-bold tracking-tighter mb-4"
           >
-            Core <span className="text-brand-primary">Expertise.</span>
+            <InlineEditable 
+              value={data.skills.title} 
+              onSave={(val) => updateSkillsHeader('title', val)} 
+              component="span"
+            />
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -45,13 +68,26 @@ const Skills = () => {
             transition={{ delay: 0.1 }}
             className="text-slate-500 max-w-xl mx-auto text-lg font-medium"
           >
-            Modern tech stack focused on performance, scalability, and exceptional user experience.
+            <InlineEditable 
+              value={data.skills.subtitle} 
+              onSave={(val) => updateSkillsHeader('subtitle', val)} 
+              component="span"
+            />
           </motion.p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {skillCategories.map((category, idx) => (
-            <SkillCard key={category.title} category={category} idx={idx} />
+          {data.skills.categories.map((category, idx) => (
+            <SkillCard 
+              key={category.title} 
+              category={category} 
+              idx={idx} 
+              isAdmin={isAdmin}
+              onUpdateTitle={(val) => updateCategoryTitle(idx, val)}
+              onUpdateSkill={(sIdx, val) => updateSkill(idx, sIdx, val)}
+              onAddSkill={() => addSkill(idx)}
+              onRemoveSkill={(sIdx) => removeSkill(idx, sIdx)}
+            />
           ))}
         </div>
       </div>
@@ -59,7 +95,7 @@ const Skills = () => {
   )
 }
 
-const SkillCard = ({ category, idx }) => {
+const SkillCard = ({ category, idx, isAdmin, onUpdateTitle, onUpdateSkill, onAddSkill, onRemoveSkill }) => {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -105,24 +141,50 @@ const SkillCard = ({ category, idx }) => {
         style={{ transform: "translateZ(50px)" }}
         className="w-14 h-14 rounded-2xl bg-white dark:bg-black border border-slate-200 dark:border-slate-800 flex items-center justify-center mb-6 text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all shadow-sm"
       >
-        {category.icon}
+        {iconMap[category.icon] || <Code />}
       </div>
       <h3 
         style={{ transform: "translateZ(40px)" }}
         className="text-2xl font-bold mb-6 tracking-tight"
       >
-        {category.title}
+        <InlineEditable 
+          value={category.title} 
+          onSave={onUpdateTitle} 
+          component="span"
+        />
       </h3>
       <ul 
         style={{ transform: "translateZ(30px)" }}
         className="space-y-4"
       >
-        {category.skills.map((skill) => (
-          <li key={skill} className="flex items-center text-slate-600 dark:text-slate-400 font-medium text-sm">
+        {category.skills.map((skill, sIdx) => (
+          <li key={sIdx} className="flex items-center text-slate-600 dark:text-slate-400 font-medium text-sm group/item">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mr-3 shadow-[0_0_8px_rgba(0,122,255,0.5)]" />
-            {skill}
+            <InlineEditable 
+              value={skill} 
+              onSave={(val) => onUpdateSkill(sIdx, val)} 
+              component="span"
+            />
+            {isAdmin && (
+              <button 
+                onClick={() => onRemoveSkill(sIdx)}
+                className="ml-auto opacity-0 group-hover/item:opacity-100 text-red-500 hover:text-red-700 transition-opacity"
+              >
+                <Trash2 size={12} />
+              </button>
+            )}
           </li>
         ))}
+        {isAdmin && (
+          <li>
+            <button 
+              onClick={onAddSkill}
+              className="flex items-center gap-2 text-xs font-bold text-brand-primary hover:gap-3 transition-all"
+            >
+              <Plus size={14} /> Add Skill
+            </button>
+          </li>
+        )}
       </ul>
     </motion.div>
   )

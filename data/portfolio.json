@@ -1,0 +1,146 @@
+{
+  "hero": {
+    "badge": "Available for new projects",
+    "title": "Hi, I’m Alanwoko Chikanma. Senior Full‑Stack Engineer.",
+    "subtitle": "I build fast, scalable, human‑centered digital experiences.",
+    "profileImage": "/hero.png"
+  },
+  "about": {
+    "title": "My Storytelling.",
+    "subtitle": "A journey through code, architecture, and innovation.",
+    "chapters": [
+      {
+        "title": "The Genesis",
+        "text": "It started with a single line of code in a cluttered room. A curiosity for how the digital world ticks evolved into a relentless pursuit of technical mastery."
+      },
+      {
+        "title": "Building the Foundation",
+        "text": "From simple scripts to complex architectures, I spent years mastering the craft of full-stack development. Every bug was a lesson; every deployment, a victory."
+      },
+      {
+        "title": "Seniority & Vision",
+        "text": "As a Senior Engineer, I don't just write code; I architect systems. I focus on scalability, security, and the bridge between high-level business goals and technical reality."
+      },
+      {
+        "title": "The Human Element",
+        "text": "At the end of every network request is a human being. I build experiences that prioritize accessibility and performance, making the web a better place for everyone."
+      },
+      {
+        "title": "Looking Ahead",
+        "text": "The horizon is always moving. I'm currently exploring the intersection of AI and cloud infrastructure, pushing the boundaries of what's possible in the browser."
+      }
+    ]
+  },
+  "skills": {
+    "title": "Core Expertise.",
+    "subtitle": "Modern tech stack focused on performance, scalability, and exceptional user experience.",
+    "categories": [
+      {
+        "title": "Frontend",
+        "icon": "Code",
+        "skills": ["React 19", "Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"]
+      },
+      {
+        "title": "Backend",
+        "icon": "Server",
+        "skills": ["Node.js", "PostgreSQL", "Redis", "GraphQL", "Prisma"]
+      },
+      {
+        "title": "Tools",
+        "icon": "Wrench",
+        "skills": ["Git", "Docker", "Vite", "Postman", "Figma"]
+      },
+      {
+        "title": "Cloud",
+        "icon": "Cloud",
+        "skills": ["AWS", "Vercel", "Netlify", "Firebase", "Clerk"]
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "1",
+      "title": "GhostCheck",
+      "description": "AI-powered Government HR tool that detects ghost workers using biometric verification and attendance anomaly analysis.",
+      "tech": ["React", "Tailwind CSS", "Squad API", "AI Analysis"],
+      "link": "#",
+      "github": "#",
+      "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "id": "2",
+      "title": "Skyline SaaS",
+      "description": "High-performance property management platform with real-time analytics and automated billing systems.",
+      "tech": ["Next.js", "PostgreSQL", "Redis", "AWS"],
+      "link": "#",
+      "github": "#",
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "id": "3",
+      "title": "Lumina Dashboard",
+      "description": "Enterprise resource planning dashboard with complex data visualization and multi-tenant support.",
+      "tech": ["React", "GraphQL", "D3.js", "TypeScript"],
+      "link": "#",
+      "github": "#",
+      "image": "https://images.unsplash.com/photo-1551288049-bbda38a5f67d?auto=format&fit=crop&q=80&w=800"
+    }
+  ],
+  "projectsSection": {
+    "title": "Selected Work.",
+    "subtitle": "A collection of premium digital products built with precision and modern engineering principles."
+  },
+  "cv": {
+    "cvUrl": "#",
+    "experiences": [
+      {
+        "company": "TechNova Solutions",
+        "role": "Senior Full Stack Engineer",
+        "period": "2023 - Present",
+        "location": "Remote / Lagos",
+        "description": "Lead engineer for the core platform architecture. Responsible for scaling frontend micro-services and implementing high-performance API layers.",
+        "achievements": [
+          "Architected and deployed a micro-frontend system using Module Federation.",
+          "Reduced overall bundle size by 35% through aggressive code-splitting.",
+          "Implemented a real-time analytics engine using WebSockets and Redis."
+        ]
+      },
+      {
+        "company": "DigitalPulse",
+        "role": "Full Stack Developer",
+        "period": "2021 - 2023",
+        "location": "London, UK (Remote)",
+        "description": "Key contributor to a multi-tenant SaaS product focused on marketing automation.",
+        "achievements": [
+          "Developed a drag-and-drop workflow builder using React-Flow.",
+          "Optimized PostgreSQL queries, improving dashboard load times by 50%.",
+          "Built a comprehensive UI component library."
+        ]
+      }
+    ],
+    "education": [
+      {
+        "school": "University of Lagos",
+        "degree": "B.Sc. in Computer Science",
+        "period": "2015 - 2019",
+        "location": "Lagos, Nigeria"
+      },
+      {
+        "school": "Tech Institute",
+        "degree": "Full Stack Development Certification",
+        "period": "2019 - 2020",
+        "location": "Online"
+      }
+    ],
+    "skillGroups": [
+      { "name": "Frontend", "skills": ["React", "Next.js", "Tailwind", "TypeScript"] },
+      { "name": "Backend", "skills": ["Node.js", "PostgreSQL", "Redis", "GraphQL"] },
+      { "name": "Cloud", "skills": ["AWS", "Docker", "Kubernetes", "Vercel"] }
+    ]
+  },
+  "contact": {
+    "email": "alanwoko@example.com",
+    "github": "#",
+    "linkedin": "#"
+  }
+}

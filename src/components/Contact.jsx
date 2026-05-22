@@ -1,7 +1,19 @@
+'use client';
+
 import { motion } from 'framer-motion'
 import { Mail, Github, Linkedin, ArrowRight } from 'lucide-react'
+import { usePortfolio } from '../context/PortfolioContext'
+import InlineEditable from './InlineEditable'
 
 const Contact = () => {
+  const { data, updateData } = usePortfolio();
+
+  if (!data) return null;
+
+  const updateContact = (field, value) => {
+    updateData({ ...data, contact: { ...data.contact, [field]: value } });
+  };
+
   return (
     <section id="contact" className="py-24 bg-slate-50 dark:bg-slate-900/30">
       <div className="container mx-auto px-6">
@@ -16,20 +28,22 @@ const Contact = () => {
             <p className="text-slate-500 mb-10 text-lg">Currently available for freelance projects and full-time opportunities. I respond within 24 hours.</p>
             
             <div className="space-y-6">
-              <a href="mailto:alanwoko@example.com" className="flex items-center group">
+              <div className="flex items-center group">
                 <div className="w-12 h-12 rounded-full bg-white dark:bg-black border border-slate-200 dark:border-slate-800 flex items-center justify-center mr-4 group-hover:bg-brand-primary group-hover:text-white transition-all">
                   <Mail size={20} />
                 </div>
                 <div>
                   <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">Email</p>
-                  <p className="text-lg font-bold">alanwoko@example.com</p>
+                  <p className="text-lg font-bold">
+                    <InlineEditable value={data.contact.email} onSave={(val) => updateContact('email', val)} />
+                  </p>
                 </div>
-              </a>
+              </div>
               <div className="flex gap-4">
-                <a href="#" className="w-12 h-12 rounded-full bg-white dark:bg-black border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all">
+                <a href={data.contact.github} className="w-12 h-12 rounded-full bg-white dark:bg-black border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all">
                   <Github size={20} />
                 </a>
-                <a href="#" className="w-12 h-12 rounded-full bg-white dark:bg-black border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all">
+                <a href={data.contact.linkedin} className="w-12 h-12 rounded-full bg-white dark:bg-black border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all">
                   <Linkedin size={20} />
                 </a>
               </div>
