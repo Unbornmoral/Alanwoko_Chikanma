@@ -1,16 +1,46 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 
 const Hero = () => {
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const mouseXSpring = useSpring(x)
+  const mouseYSpring = useSpring(y)
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"])
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    const xPct = mouseX / width - 0.5
+    const yPct = mouseY / height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section 
+      className="relative h-screen flex items-center justify-center overflow-hidden pt-20"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <motion.div 
           animate={{ 
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
-            opacity: [0.1, 0.2, 0.1]
+            opacity: [0.1, 0.15, 0.1]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-brand-primary blur-[120px]"
@@ -19,29 +49,43 @@ const Hero = () => {
           animate={{ 
             scale: [1.2, 1, 1.2],
             rotate: [90, 0, 90],
-            opacity: [0.1, 0.2, 0.1]
+            opacity: [0.1, 0.15, 0.1]
           }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-brand-secondary blur-[120px]"
         />
       </div>
 
-      <div className="container mx-auto px-6 z-10 text-center">
+      <div className="container mx-auto px-6 z-10 grid lg:grid-cols-2 gap-12 items-center text-left">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="inline-block px-4 py-1.5 mb-6 text-xs font-semibold tracking-widest uppercase bg-slate-100 dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-800">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="inline-block px-4 py-1.5 mb-6 text-xs font-semibold tracking-widest uppercase bg-slate-100 dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-800"
+          >
             Available for new projects
-          </span>
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-400">
-            Building Digital <br /> Excellence.
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10">
-            Senior Full-Stack Engineer specialized in high-performance web applications and premium digital experiences. 
-          </p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+          </motion.span>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-400 leading-[1.1]"
+          >
+            Hi, I’m Alanwoko Chikanma. <br />
+            Senior Full‑Stack Engineer. <br />
+            <span className="text-brand-primary">I build fast, scalable, human‑centered digital experiences.</span>
+          </motion.h1>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-col sm:flex-row items-start gap-4 mt-8"
+          >
             <a 
               href="#projects"
               className="px-8 py-4 rounded-full bg-brand-primary text-white font-medium hover:bg-brand-primary/90 transition-all flex items-center group shadow-lg shadow-brand-primary/20"
@@ -55,6 +99,64 @@ const Hero = () => {
             >
               Get in Touch
             </a>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            perspective: "1200px",
+            rotateX,
+            rotateY,
+            transformStyle: "preserve-3d",
+          }}
+          className="hidden lg:flex justify-center"
+        >
+          <div 
+            style={{
+              transform: "translateZ(100px)",
+              transformStyle: "preserve-3d",
+            }}
+            className="relative w-96 h-96 rounded-[64px] glass border border-white/20 dark:border-white/10 shadow-2xl flex items-center justify-center overflow-visible"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 rounded-[64px]" />
+            
+            <motion.div 
+              animate={{ 
+                rotate: 360,
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="w-56 h-56 rounded-full border border-dashed border-brand-primary/20 absolute"
+            />
+
+            <div 
+              style={{
+                transform: "translateZ(80px)",
+              }}
+              className="absolute text-6xl font-bold tracking-tighter drop-shadow-2xl"
+            >
+              AC<span className="text-brand-primary">.</span>
+            </div>
+            
+            {/* Floating glass elements */}
+            <motion.div 
+              style={{
+                transform: "translateZ(120px)",
+              }}
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-12 -right-8 w-24 h-24 rounded-3xl glass border border-white/30 shadow-2xl"
+            />
+            <motion.div 
+              style={{
+                transform: "translateZ(60px)",
+              }}
+              animate={{ y: [0, 15, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-8 -left-12 w-20 h-20 rounded-full glass border border-white/30 shadow-2xl"
+            />
           </div>
         </motion.div>
       </div>

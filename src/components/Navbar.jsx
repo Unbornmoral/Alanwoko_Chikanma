@@ -13,7 +13,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       </div>
       
       <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
-        {['About', 'Skills', 'Projects', 'Experience', 'Contact'].map((item) => (
+        {['About', 'Skills', 'Projects', 'CV', 'Contact'].map((item) => (
           <a 
             key={item} 
             href={`#${item.toLowerCase()}`}

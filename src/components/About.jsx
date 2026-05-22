@@ -1,59 +1,104 @@
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useRef } from 'react'
 
 const About = () => {
-  const timeline = [
-    { year: '2023 - Present', title: 'Senior Full Stack Engineer', company: 'TechNova Solutions', description: 'Leading frontend architecture and cloud migration projects.' },
-    { year: '2021 - 2023', title: 'Full Stack Developer', company: 'DigitalPulse', description: 'Built and scaled multiple SaaS products using React and Node.js.' },
-    { year: '2019 - 2021', title: 'Frontend Developer', company: 'CreativeWeb', description: 'Specialized in creating high-fidelity animations and UI components.' },
+  const containerRef = useRef(null)
+  
+  // Track scroll progress for the whole section
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end end"]
+  })
+
+  // Smooth line growth
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  const storyChapters = [
+    {
+      title: "The Genesis",
+      text: "It started with a single line of code in a cluttered room. A curiosity for how the digital world ticks evolved into a relentless pursuit of technical mastery."
+    },
+    {
+      title: "Building the Foundation",
+      text: "From simple scripts to complex architectures, I spent years mastering the craft of full-stack development. Every bug was a lesson; every deployment, a victory."
+    },
+    {
+      title: "Seniority & Vision",
+      text: "As a Senior Engineer, I don't just write code; I architect systems. I focus on scalability, security, and the bridge between high-level business goals and technical reality."
+    },
+    {
+      title: "The Human Element",
+      text: "At the end of every network request is a human being. I build experiences that prioritize accessibility and performance, making the web a better place for everyone."
+    },
+    {
+      title: "Looking Ahead",
+      text: "The horizon is always moving. I'm currently exploring the intersection of AI and cloud infrastructure, pushing the boundaries of what's possible in the browser."
+    }
   ]
 
   return (
-    <section id="about" className="py-24 bg-slate-50 dark:bg-slate-900/30">
-      <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-16 items-start">
+    <section id="about" ref={containerRef} className="py-32 relative bg-white dark:bg-black overflow-hidden">
+      <div className="container mx-auto px-6 relative">
+        <div className="max-w-4xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
+            className="mb-24"
           >
-            <h2 className="text-4xl font-bold tracking-tighter mb-8">My Story</h2>
-            <div className="space-y-6 text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
-              <p>
-                I am Alanwoko Chikanma, a passionate software engineer dedicated to crafting exceptional digital experiences. My journey in technology began with a curiosity about how things work, which evolved into a career building complex systems.
-              </p>
-              <p>
-                With over 5 years of experience, I specialize in building scalable, user-centric applications. I believe that good design and clean code go hand in hand to create products that not only work well but also delight users.
-              </p>
-              <p>
-                When I'm not coding, you'll find me exploring new technologies, contributing to open-source projects, or sharing my knowledge with the tech community.
-              </p>
-            </div>
+            <h2 className="text-4xl md:text-7xl font-bold tracking-tighter mb-4">
+              My <span className="text-brand-primary italic">Story</span>telling.
+            </h2>
+            <p className="text-slate-500 text-lg md:text-xl font-medium">A journey through code, architecture, and innovation.</p>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative"
-          >
-            <h3 className="text-xl font-bold mb-10 text-slate-400 uppercase tracking-widest text-sm">Journey</h3>
-            <div className="space-y-12 relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-px before:bg-slate-200 dark:before:bg-slate-800 ml-4 pl-10">
-              {timeline.map((item, index) => (
-                <div key={index} className="relative">
-                  <div className="absolute -left-[53px] top-1 w-6 h-6 rounded-full bg-white dark:bg-black border-2 border-brand-primary z-10" />
-                  <span className="text-sm font-bold text-brand-primary mb-2 block tracking-tight">{item.year}</span>
-                  <h4 className="text-xl font-bold mb-1">{item.title}</h4>
-                  <p className="text-sm text-slate-500 mb-3">{item.company}</p>
-                  <p className="text-slate-600 dark:text-slate-400">{item.description}</p>
-                </div>
+          <div className="relative pl-12 md:pl-32">
+            {/* The Growing Vertical Line */}
+            <motion.div 
+              style={{ scaleY, originY: 0 }}
+              className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-primary to-brand-secondary rounded-full"
+            />
+            
+            <div className="space-y-48">
+              {storyChapters.map((chapter, index) => (
+                <StoryChapter 
+                  key={index}
+                  title={chapter.title}
+                  text={chapter.text}
+                />
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
+  )
+}
+
+const StoryChapter = ({ title, text }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15%" }}
+      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative group"
+    >
+      {/* Node on the line */}
+      <div className="absolute -left-[60px] md:-left-[140px] top-2 w-4 h-4 rounded-full bg-white dark:bg-black border-4 border-brand-primary z-10 shadow-[0_0_20px_rgba(0,122,255,0.6)] group-hover:scale-150 transition-transform" />
+      
+      <h3 className="text-2xl md:text-4xl font-bold mb-8 tracking-tight text-slate-900 dark:text-white transition-colors group-hover:text-brand-primary">
+        {title}
+      </h3>
+      <p className="text-xl md:text-2xl text-slate-500 dark:text-slate-400 leading-relaxed max-w-3xl font-medium">
+        {text}
+      </p>
+    </motion.div>
   )
 }
 
