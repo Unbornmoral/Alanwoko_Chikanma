@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Plus, Trash2 } from 'lucide-react';
+import { X, Upload, Plus, Trash2, Loader2 } from 'lucide-react';
 
 const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
     image: '',
   });
   const [newTech, setNewTech] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -48,10 +49,20 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
   };
 
   const handleImageUpload = async (e) => {
-    // Mock upload
-    const response = await fetch('/api/upload', { method: 'POST' });
-    const result = await response.json();
-    setFormData({ ...formData, image: result.url });
+    setIsUploading(true);
+    try {
+      // Mock upload
+      const response = await fetch('/api/upload', { 
+        method: 'POST',
+        body: JSON.stringify({ type: 'project' })
+      });
+      const result = await response.json();
+      setFormData({ ...formData, image: result.url });
+    } catch (error) {
+      alert('Upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -153,9 +164,15 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
                 <button 
                   type="button" 
                   onClick={handleImageUpload}
-                  className="flex items-center gap-2 text-brand-primary font-bold hover:underline"
+                  disabled={isUploading}
+                  className="flex items-center gap-2 text-brand-primary font-bold hover:underline disabled:opacity-50"
                 >
-                  <Upload size={18} /> Change Image
+                  {isUploading ? (
+                    <Loader2 size={18} className="animate-spin" />
+                  ) : (
+                    <Upload size={18} />
+                  )}
+                  {isUploading ? 'Uploading...' : 'Change Image'}
                 </button>
               </div>
             </div>

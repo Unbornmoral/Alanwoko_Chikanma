@@ -1,15 +1,16 @@
 'use client';
 
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { usePortfolio } from '../context/PortfolioContext'
 import InlineEditable from './InlineEditable'
-import { Upload } from 'lucide-react'
+import { Upload, Loader2 } from 'lucide-react'
 
 const About = () => {
   const { data, updateData, isAdmin } = usePortfolio();
   const containerRef = useRef(null)
   const fileInputRef = useRef(null)
+  const [isUploading, setIsUploading] = useState(false)
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -36,13 +37,20 @@ const About = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: JSON.stringify({ type: 'profile' })
-    });
-    const result = await response.json();
-    updateHero('profileImage', result.url);
-    alert('Profile photo updated successfully (Mock)');
+    setIsUploading(true);
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: JSON.stringify({ type: 'profile' })
+      });
+      const result = await response.json();
+      updateHero('profileImage', result.url);
+      alert('Profile photo updated successfully (Mock)');
+    } catch (error) {
+      alert('Upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const updateChapter = (index, field, value) => {
@@ -82,7 +90,11 @@ const About = () => {
               />
               {isAdmin && (
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Upload className="text-white" size={32} />
+                  {isUploading ? (
+                    <Loader2 className="text-white animate-spin" size={32} />
+                  ) : (
+                    <Upload className="text-white" size={32} />
+                  )}
                 </div>
               )}
             </div>

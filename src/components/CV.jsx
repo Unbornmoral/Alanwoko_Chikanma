@@ -1,14 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion'
-import { Briefcase, GraduationCap, Code, Download, MapPin, Plus, Trash2, Upload } from 'lucide-react'
+import { Briefcase, GraduationCap, Code, Download, MapPin, Plus, Trash2, Upload, Loader2 } from 'lucide-react'
 import { usePortfolio } from '../context/PortfolioContext'
 import InlineEditable from './InlineEditable'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 const CV = () => {
   const { data, updateData, isAdmin } = usePortfolio();
   const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   if (!data) return null;
 
@@ -20,15 +21,22 @@ const CV = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Mock upload
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: JSON.stringify({ filename: file.name, type: 'pdf' })
-    });
-    const result = await response.json();
-    // For mock, we'll just use a sample PDF URL or the same mock image URL
-    updateCV('cvUrl', result.url);
-    alert('CV updated successfully (Mock)');
+    setIsUploading(true);
+    try {
+      // Mock upload
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: JSON.stringify({ filename: file.name, type: 'pdf' })
+      });
+      const result = await response.json();
+      // For mock, we'll just use a sample PDF URL or the same mock image URL
+      updateCV('cvUrl', result.url);
+      alert('CV updated successfully (Mock)');
+    } catch (error) {
+      alert('Upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const updateExperience = (idx, field, value) => {
@@ -88,11 +96,16 @@ const CV = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    disabled={isUploading}
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-3 px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold transition-all"
+                    className="flex items-center gap-3 px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold transition-all disabled:opacity-50"
                   >
-                    <Upload size={20} />
-                    Attach/Update CV
+                    {isUploading ? (
+                      <Loader2 size={20} className="animate-spin" />
+                    ) : (
+                      <Upload size={20} />
+                    )}
+                    {isUploading ? 'Uploading...' : 'Attach/Update CV'}
                   </motion.button>
                 </>
               )}
