@@ -3,11 +3,12 @@
     "badge": "Available for new projects",
     "title": "Hi, I’m Alanwoko Chikanma. Senior Full‑Stack Engineer.",
     "subtitle": "I build fast, scalable, human‑centered digital experiences.",
-    "profileImage": "/hero.png"
+    "profileImage": "/profile.png"
   },
   "about": {
     "title": "My Storytelling.",
     "subtitle": "A journey through code, architecture, and innovation.",
+    "profileImage": "/profile.png",
     "chapters": [
       {
         "title": "The Genesis",
@@ -63,61 +64,43 @@
       "title": "GhostCheck",
       "description": "AI-powered Government HR tool that detects ghost workers using biometric verification and attendance anomaly analysis.",
       "tech": ["React", "Tailwind CSS", "Squad API", "AI Analysis"],
-      "link": "#",
-      "github": "#",
+      "link": "https://verigov-frontend.vercel.app/",
+      "github": "https://github.com/Unbornmoral/VeriGov",
       "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      "id": "2",
-      "title": "Skyline SaaS",
-      "description": "High-performance property management platform with real-time analytics and automated billing systems.",
-      "tech": ["Next.js", "PostgreSQL", "Redis", "AWS"],
-      "link": "#",
-      "github": "#",
-      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      "id": "3",
-      "title": "Lumina Dashboard",
-      "description": "Enterprise resource planning dashboard with complex data visualization and multi-tenant support.",
-      "tech": ["React", "GraphQL", "D3.js", "TypeScript"],
-      "link": "#",
-      "github": "#",
-      "image": "https://images.unsplash.com/photo-1551288049-bbda38a5f67d?auto=format&fit=crop&q=80&w=800"
     },
     {
       "id": "4",
       "title": "NAPSS UniLag — Academic Resource & Collaboration Platform",
-      "description": "NAPSS UniLag is a comprehensive academic platform built for Political Science students at the University of Lagos. It centralizes study materials, past questions, assignments, and real-time academic updates.",
-      "fullDescription": "NAPSS UniLag is a comprehensive academic platform built for Political Science students at the University of Lagos. It centralizes study materials, past questions, assignments, and real‑time academic updates, helping students stay organized and excel academically. The platform supports collaborative learning and organizes content by academic year and semester. I designed, developed, and maintain the entire platform.",
-      "features": ["Study materials", "Past questions", "Real-time updates", "Collaborative learning", "Year-based organization", "Assignment submission", "Newsletter"],
+      "description": "Comprehensive academic platform for Political Science students. Centralizes study materials, past questions, and updates.",
+      "fullDescription": "NAPSS UniLag is a comprehensive academic platform built for Political Science students at the University of Lagos. It centralizes study materials, past questions, assignments, and real‑time academic updates, helping students stay organized and excel academically. I designed, developed, and maintain the entire platform.",
+      "features": ["Study materials organization", "Past questions repository", "Real-time academic updates", "Collaborative learning tools", "Year-based content structure", "Newsletter subscription"],
       "impact": "Improves academic accessibility and enhances student performance by centralizing all Political Science resources.",
       "tech": ["Next.js", "React", "TailwindCSS", "Cloud Storage", "REST APIs"],
-      "link": "#",
+      "link": "https://napssunilagos.lovable.app/dashboard",
       "github": "#",
       "image": "https://images.unsplash.com/photo-1523050335102-c32509782f25?auto=format&fit=crop&q=80&w=800"
     },
     {
       "id": "5",
       "title": "NAPS UNILAG — Psychology Students Academic Platform",
-      "description": "Modern academic platform for Psychology students at the University of Lagos. Provides access to course materials, past questions, and departmental updates.",
+      "description": "Modern academic platform for Psychology students. Provides access to course materials, past questions, and updates.",
       "fullDescription": "NAPS UNILAG is a modern academic platform for Psychology students at the University of Lagos. It provides access to course materials, past questions, departmental updates, and student resources. The platform is designed to help students stay organized and improve academic performance through a clean, responsive interface.",
-      "features": ["Course materials", "Past questions", "Departmental announcements", "Level-based organization", "Responsive UI", "Student-friendly navigation"],
+      "features": ["Study Materials", "Past Questions", "Collaborative Learning", "Real-time Updates", "Level-based organization", "Departmental announcements"],
       "impact": "Improves access to academic resources and strengthens departmental communication.",
       "tech": ["Next.js", "React", "TailwindCSS", "Cloud Storage", "REST APIs"],
-      "link": "#",
+      "link": "https://napsunilag.lovable.app/",
       "github": "#",
       "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800"
     },
     {
       "id": "6",
       "title": "Resume Genius — AI‑Powered Resume Builder",
-      "description": "AI-powered resume creation platform that helps users generate professional, ATS-friendly resumes in minutes with intelligent suggestions.",
+      "description": "AI-powered resume creation platform for building professional, ATS-friendly resumes in minutes.",
       "fullDescription": "Resume Genius is an AI‑powered resume creation platform that helps users generate professional, ATS‑friendly resumes in minutes. It provides structured editing sections, intelligent suggestions, and clean templates with real‑time preview. Users can export their resumes as PDFs and build polished documents without design or writing experience.",
-      "features": ["AI-generated content", "Modern templates", "Real-time preview", "Section-based editing", "PDF export", "Fully responsive design"],
-      "impact": "Enables users to create professional resumes quickly and effectively.",
+      "features": ["AI-generated resume content", "Multiple modern resume templates", "Real-time preview while editing", "Section-based editing", "Export to PDF", "Fully responsive design"],
+      "impact": "Enables users to create professional resumes quickly and effectively, improving job application quality.",
       "tech": ["Next.js", "React", "TailwindCSS", "AI APIs", "HTML-to-PDF rendering"],
-      "link": "#",
+      "link": "https://resume-genius-beta.vercel.app/",
       "github": "#",
       "image": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=800"
     }
