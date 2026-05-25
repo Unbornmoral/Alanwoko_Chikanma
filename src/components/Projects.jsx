@@ -216,8 +216,16 @@ const ProjectCard = ({ project, idx }) => {
       
       <div className="p-10 flex-1 flex flex-col">
         <h3 className="text-3xl font-bold mb-4 tracking-tight">{project.title}</h3>
-        <p className="text-slate-500 dark:text-slate-400 mb-8 text-base leading-relaxed font-medium flex-1">{project.description}</p>
-        <div className="flex flex-wrap gap-2">
+        <p className="text-slate-500 dark:text-slate-400 mb-6 text-base leading-relaxed font-medium">{project.description}</p>
+        
+        {project.impact && (
+          <div className="mb-8 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary mb-2">Key Impact</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed italic">"{project.impact}"</p>
+          </div>
+        )}
+
+        <div className="mt-auto pt-6 flex flex-wrap gap-2">
           {project.tech.map(t => (
             <span key={t} className="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 text-xs font-bold text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 uppercase tracking-wider">{t}</span>
           ))}
