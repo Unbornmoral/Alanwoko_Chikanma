@@ -8,21 +8,38 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    fullDescription: '',
+    features: [],
+    impact: '',
     tech: [],
     link: '',
     github: '',
     image: '',
   });
   const [newTech, setNewTech] = useState('');
+  const [newFeature, setNewFeature] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (project) {
-      setFormData(project);
+      setFormData({
+        title: project.title || '',
+        description: project.description || '',
+        fullDescription: project.fullDescription || '',
+        features: project.features || [],
+        impact: project.impact || '',
+        tech: project.tech || [],
+        link: project.link || '',
+        github: project.github || '',
+        image: project.image || '',
+      });
     } else {
       setFormData({
         title: '',
         description: '',
+        fullDescription: '',
+        features: [],
+        impact: '',
         tech: [],
         link: '',
         github: '',
@@ -46,6 +63,17 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
 
   const removeTech = (t) => {
     setFormData({ ...formData, tech: formData.tech.filter(item => item !== t) });
+  };
+
+  const addFeature = () => {
+    if (newFeature && !formData.features.includes(newFeature)) {
+      setFormData({ ...formData, features: [...formData.features, newFeature] });
+      setNewFeature('');
+    }
+  };
+
+  const removeFeature = (f) => {
+    setFormData({ ...formData, features: formData.features.filter(item => item !== f) });
   };
 
   const handleImageUpload = async (e) => {
@@ -98,13 +126,33 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Description</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Short Description (Cards)</label>
               <textarea 
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 required
-                rows="3"
+                rows="2"
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-primary outline-none resize-none" 
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Full Description</label>
+              <textarea 
+                value={formData.fullDescription}
+                onChange={(e) => setFormData({...formData, fullDescription: e.target.value})}
+                rows="4"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-primary outline-none resize-none" 
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Impact</label>
+              <input 
+                type="text" 
+                value={formData.impact}
+                onChange={(e) => setFormData({...formData, impact: e.target.value})}
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-primary outline-none" 
               />
             </div>
 
@@ -126,6 +174,34 @@ const ProjectModal = ({ isOpen, onClose, project, onSave }) => {
                   onChange={(e) => setFormData({...formData, github: e.target.value})}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-primary outline-none" 
                 />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-xs font-bold uppercase tracking-widest text-slate-400 block">Key Features</label>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={newFeature}
+                  onChange={(e) => setNewFeature(e.target.value)}
+                  className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-primary outline-none" 
+                  placeholder="Add feature..."
+                />
+                <button 
+                  type="button" 
+                  onClick={addFeature}
+                  className="px-6 bg-brand-primary text-white rounded-xl font-bold"
+                >
+                  Add
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {formData.features.map(f => (
+                  <span key={f} className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold">
+                    {f}
+                    <button type="button" onClick={() => removeFeature(f)} className="text-red-500"><X size={14} /></button>
+                  </span>
+                ))}
               </div>
             </div>
 
