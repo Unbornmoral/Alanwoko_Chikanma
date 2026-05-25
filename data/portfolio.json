@@ -84,6 +84,33 @@
       "link": "#",
       "github": "#",
       "image": "https://images.unsplash.com/photo-1551288049-bbda38a5f67d?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "id": "4",
+      "title": "NAPSS UniLag",
+      "description": "Academic platform for Political Science students at UniLag. Centralizes study materials, past questions, and collaborative learning.",
+      "tech": ["Next.js", "React", "TailwindCSS", "Cloud Storage", "REST APIs"],
+      "link": "#",
+      "github": "#",
+      "image": "https://images.unsplash.com/photo-1523050335102-c32509782f25?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "id": "5",
+      "title": "NAPS UNILAG",
+      "description": "Academic platform for Psychology students at UniLag. Access to course materials, past questions, and departmental updates.",
+      "tech": ["Next.js", "React", "TailwindCSS", "Cloud Storage", "REST APIs"],
+      "link": "#",
+      "github": "#",
+      "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      "id": "6",
+      "title": "Resume Genius",
+      "description": "AI-powered resume builder with structured sections, intelligent suggestions, and real-time preview. Export to PDF.",
+      "tech": ["Next.js", "React", "TailwindCSS", "AI APIs", "HTML-to-PDF"],
+      "link": "#",
+      "github": "#",
+      "image": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=800"
     }
   ],
   "projectsSection": {
